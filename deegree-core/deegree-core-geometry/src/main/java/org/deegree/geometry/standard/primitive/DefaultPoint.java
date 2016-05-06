@@ -56,6 +56,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 public class DefaultPoint extends AbstractDefaultGeometry implements Point {
 
     private double[] coordinates;
+    private double nullValue = 0;
 
     /**
      * Creates a new <code>DefaultPoint</code> instance from the given parameters.
@@ -110,7 +111,10 @@ public class DefaultPoint extends AbstractDefaultGeometry implements Point {
     @Override
     public double get2() {
         if ( coordinates.length > 2 ) {
-            return coordinates[2];
+            if (Double.isNaN( coordinates[2] ))
+                return nullValue;
+            else
+                return coordinates[2];
         }
         return Double.NaN;
     }
@@ -163,6 +167,8 @@ public class DefaultPoint extends AbstractDefaultGeometry implements Point {
         if ( coordinates.length == 2 ) {
             coords = new Coordinate( coordinates[0], coordinates[1] );
         } else if ( coordinates.length == 3 ) {
+            if (Double.isNaN( coordinates[2] ))
+                coordinates[2] = nullValue;
             coords = new Coordinate( coordinates[0], coordinates[1], coordinates[2] );
         } else {
             throw new UnsupportedOperationException();
