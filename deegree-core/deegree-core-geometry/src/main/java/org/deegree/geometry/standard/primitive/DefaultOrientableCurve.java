@@ -103,10 +103,29 @@ public class DefaultOrientableCurve extends AbstractDefaultGeometry implements O
     public LineString getAsLineString() {
         return baseCurve.getAsLineString();
     }
+    
+    private CurveSegment reverseSegment(CurveSegment segment){
+        org.deegree.geometry.primitive.segments.LineStringSegment orientedSegment=(org.deegree.geometry.primitive.segments.LineStringSegment)segment;
+        Points orientedPoints=orientedSegment.getControlPoints();
+        List<Point> reversedPointList= new java.util.ArrayList<Point>();
+        for (int j = orientedPoints.size() -1; j >-1 ; j--){
+            reversedPointList.add( orientedPoints.get( j ) );
+        }
+        DefaultLineString lineString= new DefaultLineString(  id,  crs,  pm, new org.deegree.geometry.standard.points.PointsList( reversedPointList ) );
+        return lineString.getCurveSegments().get( 0 );
+    }
 
     @Override
     public List<CurveSegment> getCurveSegments() {
-        return baseCurve.getCurveSegments();
+        if (isReversed){
+            List<CurveSegment> reversedSegments=new java.util.ArrayList<CurveSegment>();
+            for ( CurveSegment segment : baseCurve.getCurveSegments() ) {
+                reversedSegments.add( reverseSegment(segment) );
+            }
+            return reversedSegments;
+        }
+        else
+            return baseCurve.getCurveSegments();
     }
 
     @Override
