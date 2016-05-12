@@ -112,15 +112,17 @@ public class DefaultPoint extends AbstractDefaultGeometry implements Point {
 
     @Override
     public double get2() {
-        if ( coordinates.length > 2 ) {
-            if (Double.isNaN( coordinates[2] ))
+        if (crs != null){
+            if ( coordinates.length > 2 ) {
+                if (Double.isNaN( coordinates[2] ))
+                    return nullValue;
+                else
+                    return coordinates[2];
+            }
+            //This seems to fix nullvalue for z in stroked arcs
+            if (crs.getDimension() == 3 ){
                 return nullValue;
-            else
-                return coordinates[2];
-        }
-        //This seems to fix nullvalue for z in stroked arcs
-        if (crs.getDimension() == 3 ){
-            return nullValue;
+            }
         }
         return Double.NaN;
     }
