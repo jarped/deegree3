@@ -52,10 +52,10 @@ import org.deegree.cs.components.Unit;
 public class DecimalCoordinateFormatter implements CoordinateFormatter {
 
     /** Number of decimal places used by default (6). **/
-    public static final int DEFAULT_PLACES = 15;
+    public static final int DEFAULT_PLACES = 6;
 
     /** Number of decimal places used for metric coordinates (3). **/
-    private static final int DEFAULT_PLACES_METRE = 12;
+    private static final int DEFAULT_PLACES_METRE = 3;
 
     private final DecimalFormat decimalFormat;
 
