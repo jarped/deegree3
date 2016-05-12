@@ -120,6 +120,6 @@ public class DecimalCoordinateFormatter implements CoordinateFormatter {
 
     @Override
     public String format( double number ) {
-        return decimalFormat.format( number );
+        return String.valueOf( number );
     }
 }
