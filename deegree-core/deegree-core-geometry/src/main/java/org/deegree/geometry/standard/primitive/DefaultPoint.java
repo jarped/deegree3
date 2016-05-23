@@ -56,7 +56,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 public class DefaultPoint extends AbstractDefaultGeometry implements Point {
 
     private double[] coordinates;
-    private double nullValue = 0;
+    private double nullValue = -99999;
     private ICRS crs;
 
     /**
