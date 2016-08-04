@@ -323,6 +323,8 @@ public class MappedSchemaBuilderGML extends AbstractMappedSchemaBuilder {
         FIDMapping fidMapping = buildFIDMapping( ftTable, ftName, ftMappingConf.getFIDMapping() );
         List<Mapping> particleMappings = new ArrayList<Mapping>();
         XSElementDeclaration elDecl = gmlSchema.getGMLSchema().getElementDecl( ftName );
+        if(elDecl == null)
+            throw new FeatureStoreException("Feature with name " + ftName.getLocalPart() + " not found in namespace " + ftName.getNamespaceURI());
         for ( JAXBElement<? extends AbstractParticleJAXB> particle : ftMappingConf.getAbstractParticle() ) {
             particleMappings.add( buildMapping( ftTable, new Pair<XSElementDeclaration, Boolean>( elDecl, TRUE ),
                                                 particle.getValue() ) );
