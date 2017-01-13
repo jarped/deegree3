@@ -136,6 +136,9 @@ public class FeatureRow extends InsertRow {
 
         FeatureTypeMapping ftMapping = mgr.getSchema().getFtMapping( feature.getName() );
 
+        if(ftMapping == null){
+            throw new FeatureStoreException("Featuretype " + feature.getName() + " not found. Has it been included in mappingfile?");
+        }
         this.table = ftMapping.getFtTable();
         this.fidMapping = ftMapping.getFidMapping();
 
