@@ -371,7 +371,7 @@ public class InsertRowManager {
                         LOG.debug( "Skipping feature mapping (fk). Not mapped to database column." );
                     } else {
                         TableJoin join = jc.get( 0 );
-                        KeyPropagation keyPropagation = getKeyPropagation( (FeatureMapping) mapping, join );
+                        KeyPropagation keyPropagation = getKeyPropagation( (FeatureMapping) mapping, join, feature.getName() );
                         // standard: pk in subfeature table (usually feature id)
                         ParentRowReference ref = new ParentRowReference( subFeatureRow, keyPropagation );
                         currentRow.addParent( ref );
@@ -419,7 +419,7 @@ public class InsertRowManager {
     }
 
     // special handling for joins to feature type tables
-    private KeyPropagation getKeyPropagation( FeatureMapping mapping, TableJoin join )
+    private KeyPropagation getKeyPropagation( FeatureMapping mapping, TableJoin join , QName ftName_tmp)
                             throws FeatureStoreException {
 
         SQLIdentifier fromColumn = join.getFromColumns().get( 0 );
@@ -439,6 +439,15 @@ public class InsertRowManager {
                                  + "') with no concrete substitutions.";
                     throw new FeatureStoreException( msg );
                 }
+                for (FeatureType subtype : concreteSubtypes ){
+                  if(subtype.getName() == ftName_tmp){
+                      ftName=ftName_tmp;
+                  }
+                }
+            }
+            if(getSchema().getFeatureType( ftName ).isAbstract() && ftName == mapping.getValueFtName()){
+//                String msg = "Feature type ('" + ftName + "') has no concrete substitutions.";
+//                           throw new FeatureStoreException( msg );
                 ftName = getSchema().getConcreteSubtypes( getSchema().getFeatureType( ftName ) )[0].getName();
             }
             FeatureTypeMapping ftMapping = getSchema().getFtMapping( ftName );
