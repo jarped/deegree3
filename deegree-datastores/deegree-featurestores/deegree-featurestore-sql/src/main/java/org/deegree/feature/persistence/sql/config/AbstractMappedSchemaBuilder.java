@@ -198,7 +198,7 @@ public abstract class AbstractMappedSchemaBuilder {
                 mapping = parser.mappingExpr().value;
             } catch ( RecognitionException e ) {
                 LOG.warn( "Unable to parse mapping expression '" + s + "': " + e.getMessage() );
-                return new DBField(s);
+                //return new DBField(s);
             }
         }
         return mapping;
