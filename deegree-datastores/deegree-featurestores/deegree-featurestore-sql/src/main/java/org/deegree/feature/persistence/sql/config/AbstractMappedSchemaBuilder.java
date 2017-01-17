@@ -79,7 +79,6 @@ import org.deegree.feature.persistence.sql.jaxb.SQLFeatureStoreJAXB.NamespaceHin
 import org.deegree.feature.persistence.sql.jaxb.StorageCRS;
 import org.deegree.feature.types.property.GeometryPropertyType.GeometryType;
 import org.deegree.sqldialect.SQLDialect;
-import org.deegree.sqldialect.filter.DBField;
 import org.deegree.sqldialect.filter.MappingExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -198,7 +197,6 @@ public abstract class AbstractMappedSchemaBuilder {
                 mapping = parser.mappingExpr().value;
             } catch ( RecognitionException e ) {
                 LOG.warn( "Unable to parse mapping expression '" + s + "': " + e.getMessage() );
-                return new DBField(s);
             }
         }
         return mapping;
