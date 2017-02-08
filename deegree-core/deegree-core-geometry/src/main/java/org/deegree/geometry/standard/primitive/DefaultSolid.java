@@ -35,16 +35,30 @@
  ----------------------------------------------------------------------------*/
 package org.deegree.geometry.standard.primitive;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.deegree.commons.uom.Measure;
 import org.deegree.commons.uom.Unit;
 import org.deegree.cs.coordinatesystems.ICRS;
 import org.deegree.geometry.Envelope;
+import org.deegree.geometry.GeometryFactory;
+import org.deegree.geometry.i18n.Messages;
+import org.deegree.geometry.linearization.CurveLinearizer;
+import org.deegree.geometry.linearization.LinearizationCriterion;
+import org.deegree.geometry.linearization.NumPointsCriterion;
 import org.deegree.geometry.precision.PrecisionModel;
+import org.deegree.geometry.primitive.Ring;
 import org.deegree.geometry.primitive.Solid;
 import org.deegree.geometry.primitive.Surface;
+import org.deegree.geometry.primitive.patches.PolygonPatch;
+import org.deegree.geometry.primitive.segments.CurveSegment;
+import org.deegree.geometry.primitive.segments.LineStringSegment;
 import org.deegree.geometry.standard.AbstractDefaultGeometry;
+
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LinearRing;
 
 /**
  * Default implementation of {@link Solid}.
@@ -56,7 +70,7 @@ import org.deegree.geometry.standard.AbstractDefaultGeometry;
  */
 public class DefaultSolid extends AbstractDefaultGeometry implements Solid {
 
-    private Surface exteriorSurface;
+    private List<Surface> exteriorSurfaces;
 
     private List<Surface> interiorSurfaces;
 
@@ -69,26 +83,26 @@ public class DefaultSolid extends AbstractDefaultGeometry implements Solid {
      *            coordinate reference system, may be null
      * @param pm
      *            precision model, may be null
-     * @param exteriorSurface
+     * @param exteriorSurfaces
      *            the exterior surface (shell) of the solid, may be null
      * @param interiorSurfaces
      *            the interior surfaces of the solid, may be null or empty
      */
-    public DefaultSolid( String id, ICRS crs, PrecisionModel pm, Surface exteriorSurface,
+    public DefaultSolid( String id, ICRS crs, PrecisionModel pm, List<Surface> exteriorSurfaces,
                          List<Surface> interiorSurfaces ) {
         super( id, crs, pm );
-        this.exteriorSurface = exteriorSurface;
+        this.exteriorSurfaces = exteriorSurfaces;
         this.interiorSurfaces = interiorSurfaces;
     }
 
     @Override
     public int getCoordinateDimension() {
-        return exteriorSurface.getCoordinateDimension();
+        return exteriorSurfaces.get( 0 ).getCoordinateDimension();
     }
 
     @Override
-    public Surface getExteriorSurface() {
-        return exteriorSurface;
+    public List<Surface> getExteriorSurface() {
+        return exteriorSurfaces;
     }
 
     @Override
@@ -124,8 +138,8 @@ public class DefaultSolid extends AbstractDefaultGeometry implements Solid {
     @Override
     public synchronized Envelope getEnvelope() {
         if ( env == null ) {
-            if ( exteriorSurface != null ) {
-                env = exteriorSurface.getEnvelope();
+            if ( exteriorSurfaces != null ) {
+                env = exteriorSurfaces.get( 0 ).getEnvelope();
             } else {
                 for ( Surface interiorSurface : interiorSurfaces ) {
                     Envelope intEnv = interiorSurface.getEnvelope();
@@ -139,5 +153,31 @@ public class DefaultSolid extends AbstractDefaultGeometry implements Solid {
 
         }
         return env;
+    }
+    
+    @Override
+    protected com.vividsolutions.jts.geom.Geometry buildJTSGeometry() {
+
+        if ( exteriorSurfaces.size() < 1 || !( exteriorSurfaces.get( 0 ) instanceof Surface ) ) {
+            throw new IllegalArgumentException( Messages.getMessage( "SOLID_HAS_NO_EXTERIOR" ) );
+        }
+
+        //// TODO handle the other patches as well
+        //Surface surface = (Surface) exteriorSurfaces.get( 0 );
+        //Ring exteriorRing = surface.getExteriorRing();
+        //List<Ring> interiorRings = surface.getInteriorRings();
+
+        //LinearRing shell = (LinearRing) getAsDefaultGeometry( exteriorRing ).getJTSGeometry();
+        //LinearRing[] holes = null;
+        //if ( interiorRings != null ) {
+        //    holes = new LinearRing[interiorRings.size()];
+        //    int i = 0;
+        //    for ( Ring ring : interiorRings ) {
+        //        holes[i++] = (LinearRing) getAsDefaultGeometry( ring ).getJTSGeometry();
+        //    }
+        //}
+        String test=this.toString();
+        //exteriorSurfaces.toString();
+        return (Geometry) exteriorSurfaces;
     }
 }

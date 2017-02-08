@@ -99,7 +99,7 @@ public interface Solid extends GeometricPrimitive {
      * 
      * @return the exterior surface, or null if no surface is distinguished as being the exterior boundary
      */
-    public Surface getExteriorSurface();
+    public List<Surface> getExteriorSurface();
 
     /**
      * Returns the interior surfaces of the solid.

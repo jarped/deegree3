@@ -1790,18 +1790,21 @@ public class GML3GeometryReader extends GML3GeometryBaseReader implements GMLGeo
         ICRS crs = determineActiveCRS( xmlStream, defaultCRS );
         List<Property> props = readStandardProperties( xmlStream, type, crs );
 
-        Surface exteriorSurface = null;
+        List<Surface> exteriorSurfaces = new LinkedList<Surface>();
         List<Surface> interiorSurfaces = new LinkedList<Surface>();
 
         // 0 or 1 exterior element (yes, 0 is possible -- see section 9.2.2.5 of GML spec)
-        if ( xmlStream.getEventType() == START_ELEMENT ) {
-            if ( xmlStream.getLocalName().equals( "exterior" ) ) {
-                exteriorSurface = parseSurfaceProperty( xmlStream, crs );
-                xmlStream.require( END_ELEMENT, gmlNs, "exterior" );
+        while ( xmlStream.getEventType() == START_ELEMENT ) {
+            if ( "surfaceMember".equals( xmlStream.getLocalName() ) ) {
+                exteriorSurfaces.add( parseSurfaceProperty( xmlStream, crs ));
             }
             xmlStream.nextTag();
         }
 
+        xmlStream.nextTag();
+        xmlStream.require( END_ELEMENT, gmlNs, "exterior" );
+        xmlStream.nextTag();
+        
         // arbitrary number of interior elements
         while ( xmlStream.getEventType() == START_ELEMENT ) {
             if ( xmlStream.getLocalName().equals( "interior" ) ) {
@@ -1814,15 +1817,18 @@ public class GML3GeometryReader extends GML3GeometryBaseReader implements GMLGeo
             }
             xmlStream.nextTag();
         }
-        Solid solid = geomFac.createSolid( gid, crs, exteriorSurface, interiorSurfaces );
+        
+        
+        
+        Solid solid = geomFac.createSolid( gid, crs, exteriorSurfaces, interiorSurfaces );
         solid.setType( type );
 
         props.addAll( readAdditionalProperties( xmlStream, type, crs ) );
         solid.setProperties( props );
 
         idContext.addObject( solid );
-
-        xmlStream.require( END_ELEMENT, elName.getNamespaceURI(), elName.getLocalPart() );
+        
+        //xmlStream.require( END_ELEMENT, elName.getNamespaceURI(), elName.getLocalPart() );
         return solid;
     }
 

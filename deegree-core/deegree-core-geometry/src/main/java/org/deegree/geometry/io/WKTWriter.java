@@ -309,16 +309,31 @@ public class WKTWriter {
      * 
      * @param geometry
      * @param writer
+     * @throws IOException 
      */
-    public void writeSolid( Solid geometry, Writer writer ) {
+    public void writeSolid( Solid geometry, Writer writer ) throws IOException {
 
         switch ( geometry.getSolidType() ) {
 
         case Solid:
             // TODO
-            throw new UnsupportedOperationException( "Handling solids is not implemented yet." );
+            writer.append("POLYHEDRALSURFACE( ");
+            for( Surface surface : geometry.getExteriorSurface() ){
+                //writer.append( "((" );
+                //for(SurfacePatch patch :surface.getPatches()){
+                    writeSurfacePatch( surface, writer );
+                    //for( Point point : (Surface) patch.getExteriorRingCoordinates()){
+                    //    writePointWithoutPrefix( point, writer );
+                    //}
+                    writer.append( "," );
+                //}
+            }
+
+            writer.append( ")" );
+            
+            //throw new UnsupportedOperationException( "Handling solids is not implemented yet." );
         case CompositeSolid:
-            throw new UnsupportedOperationException( "Handling compositeSolids is not implemented yet." );
+            //throw new UnsupportedOperationException( "Handling compositeSolids is not implemented yet." );
 
         }
 

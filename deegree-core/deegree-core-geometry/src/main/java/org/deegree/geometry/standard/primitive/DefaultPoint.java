@@ -112,7 +112,7 @@ public class DefaultPoint extends AbstractDefaultGeometry implements Point {
 
     @Override
     public double get2() {
-        if (crs != null){
+        //if (crs != null){
             if ( coordinates.length > 2 ) {
                 if (Double.isNaN( coordinates[2] ))
                     return nullValue;
@@ -123,7 +123,7 @@ public class DefaultPoint extends AbstractDefaultGeometry implements Point {
             if (crs.getDimension() == 3 ){
                 return nullValue;
             }
-        }
+        //}
         return Double.NaN;
     }
 

@@ -611,14 +611,14 @@ public class GeometryFactory extends SimpleGeometryFactory {
      *            identifier, may be null
      * @param crs
      *            coordinate reference system, may be null
-     * @param exteriorSurface
+     * @param exteriorSurfaces
      *            the exterior surface (shell) of the solid, may be null
      * @param interiorSurfaces
      *            the interior surfaces of the solid, may be null or empty
      * @return created {@link Solid}
      */
-    public Solid createSolid( String id, ICRS crs, Surface exteriorSurface, List<Surface> interiorSurfaces ) {
-        return (Solid) inspect( new DefaultSolid( id, crs, pm, exteriorSurface, interiorSurfaces ) );
+    public Solid createSolid( String id, ICRS crs, List<Surface> exteriorSurfaces, List<Surface> interiorSurfaces ) {
+        return (Solid) inspect( new DefaultSolid( id, crs, pm, exteriorSurfaces, interiorSurfaces ) );
     }
 
     /**

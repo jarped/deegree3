@@ -99,7 +99,7 @@ public class DefaultCompositeSolid extends AbstractDefaultGeometry implements Co
     }
 
     @Override
-    public Surface getExteriorSurface() {
+    public List<Surface> getExteriorSurface() {
         // TODO Auto-generated method stub
         return null;
     }
