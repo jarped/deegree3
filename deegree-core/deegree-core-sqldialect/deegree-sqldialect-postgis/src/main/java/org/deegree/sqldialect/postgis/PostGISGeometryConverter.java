@@ -43,7 +43,6 @@ import org.deegree.cs.coordinatesystems.ICRS;
 import org.deegree.geometry.Geometry;
 import org.deegree.geometry.GeometryTransformer;
 import org.deegree.geometry.io.WKBReader;
-import org.deegree.geometry.io.WKBWriter;
 import org.deegree.geometry.utils.GeometryParticleConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,9 +114,9 @@ public class PostGISGeometryConverter implements GeometryParticleConverter {
     public String getSetSnippet( Geometry particle ) {
         StringBuilder sb = new StringBuilder();
         if ( useLegacyPredicates ) {
-            sb.append( "SetSRID(GeomFromWKB(?)," );
+            sb.append( "SetSRID(GeomFromText(?)," );
         } else {
-            sb.append( "ST_SetSRID(ST_GeomFromWKB(?)," );
+            sb.append( "ST_SetSRID(ST_GeomFromText(?)," );
         }
         sb.append( srid == null ? "-1" : srid );
         sb.append( ")" );
@@ -131,12 +130,11 @@ public class PostGISGeometryConverter implements GeometryParticleConverter {
         if ( particle != null ) {
             try {
                 Geometry compatible = getCompatibleGeometry( particle );
-                wkb = WKBWriter.write( compatible );
+                stmt.setString( paramIndex, compatible.toString() );
             } catch ( Throwable t ) {
                 throw new IllegalArgumentException( t.getMessage(), t );
             }
         }
-        stmt.setBytes( paramIndex, wkb );
     }
 
     private Geometry getCompatibleGeometry( Geometry literal )

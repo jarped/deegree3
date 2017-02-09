@@ -318,19 +318,18 @@ public class WKTWriter {
         case Solid:
             // TODO
             writer.append("POLYHEDRALSURFACE( ");
+            int y = geometry.getExteriorSurface().size();
+            int i = 0;
             for( Surface surface : geometry.getExteriorSurface() ){
-                //writer.append( "((" );
-                //for(SurfacePatch patch :surface.getPatches()){
-                    writeSurfacePatch( surface, writer );
-                    //for( Point point : (Surface) patch.getExteriorRingCoordinates()){
-                    //    writePointWithoutPrefix( point, writer );
-                    //}
+                writeSurfacePatch( surface, writer );
+                i++;
+                if(i != y){
                     writer.append( "," );
-                //}
+                }
+                
             }
 
             writer.append( ")" );
-            
             //throw new UnsupportedOperationException( "Handling solids is not implemented yet." );
         case CompositeSolid:
             //throw new UnsupportedOperationException( "Handling compositeSolids is not implemented yet." );

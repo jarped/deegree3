@@ -154,30 +154,4 @@ public class DefaultSolid extends AbstractDefaultGeometry implements Solid {
         }
         return env;
     }
-    
-    @Override
-    protected com.vividsolutions.jts.geom.Geometry buildJTSGeometry() {
-
-        if ( exteriorSurfaces.size() < 1 || !( exteriorSurfaces.get( 0 ) instanceof Surface ) ) {
-            throw new IllegalArgumentException( Messages.getMessage( "SOLID_HAS_NO_EXTERIOR" ) );
-        }
-
-        //// TODO handle the other patches as well
-        //Surface surface = (Surface) exteriorSurfaces.get( 0 );
-        //Ring exteriorRing = surface.getExteriorRing();
-        //List<Ring> interiorRings = surface.getInteriorRings();
-
-        //LinearRing shell = (LinearRing) getAsDefaultGeometry( exteriorRing ).getJTSGeometry();
-        //LinearRing[] holes = null;
-        //if ( interiorRings != null ) {
-        //    holes = new LinearRing[interiorRings.size()];
-        //    int i = 0;
-        //    for ( Ring ring : interiorRings ) {
-        //        holes[i++] = (LinearRing) getAsDefaultGeometry( ring ).getJTSGeometry();
-        //    }
-        //}
-        String test=this.toString();
-        //exteriorSurfaces.toString();
-        return (Geometry) exteriorSurfaces;
-    }
 }
