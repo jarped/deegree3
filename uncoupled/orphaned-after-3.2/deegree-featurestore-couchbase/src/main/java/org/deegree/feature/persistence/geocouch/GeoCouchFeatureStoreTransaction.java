@@ -109,7 +109,7 @@ public class GeoCouchFeatureStoreTransaction implements FeatureStoreTransaction 
     }
 
     @Override
-    public String performReplace( Feature replacement, Filter filter, Lock lock, IDGenMode idGenMode )
+    public List<String> performReplace( Feature replacement, Filter filter, Lock lock, IDGenMode idGenMode )
                             throws FeatureStoreException {
         throw new FeatureStoreException( "Replace is not supported by GeoCouchFeatureStore." );
     }

@@ -57,6 +57,8 @@ public class DefaultPoint extends AbstractDefaultGeometry implements Point {
 
     private double[] coordinates;
 
+    private double nullValue = -99999;
+    private ICRS crs;
     /**
      * Creates a new <code>DefaultPoint</code> instance from the given parameters.
      * 
@@ -71,6 +73,7 @@ public class DefaultPoint extends AbstractDefaultGeometry implements Point {
      */
     public DefaultPoint( String id, ICRS crs, PrecisionModel pm, double[] coordinates ) {
         super( id, crs, pm );
+        this.crs = crs;
         this.coordinates = coordinates;
     }
 
@@ -109,8 +112,17 @@ public class DefaultPoint extends AbstractDefaultGeometry implements Point {
 
     @Override
     public double get2() {
-        if ( coordinates.length > 2 ) {
-            return coordinates[2];
+        if (crs != null){
+            if ( coordinates.length > 2 ) {
+                if (Double.isNaN( coordinates[2] ))
+                    return nullValue;
+                else
+                    return coordinates[2];
+            }
+            //This seems to fix nullvalue for z in stroked arcs
+            if (crs.getDimension() == 3 ){
+                return nullValue;
+            }
         }
         return Double.NaN;
     }
@@ -163,6 +175,8 @@ public class DefaultPoint extends AbstractDefaultGeometry implements Point {
         if ( coordinates.length == 2 ) {
             coords = new Coordinate( coordinates[0], coordinates[1] );
         } else if ( coordinates.length == 3 ) {
+            if (Double.isNaN( coordinates[2] ))
+                coordinates[2] = nullValue;
             coords = new Coordinate( coordinates[0], coordinates[1], coordinates[2] );
         } else {
             throw new UnsupportedOperationException();
